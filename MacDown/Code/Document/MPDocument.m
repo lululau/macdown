@@ -27,6 +27,8 @@
 #import "MPEditorPreferencesViewController.h"
 #import "MPExportPanelAccessoryViewController.h"
 #import "MPMathJaxListener.h"
+#import "MPTreeNode.h"
+#import "MPMarkdownOutlineParser.h"
 
 
 static NSString * const kMPRendersTOCPropertyKey = @"Renders TOC";
@@ -176,7 +178,7 @@ NS_INLINE NSColor *MPGetWebViewBackgroundColor(WebView *webview)
 
 @interface MPDocument ()
     <NSSplitViewDelegate, NSTextViewDelegate,
-     MPAutosaving, MPRendererDataSource, MPRendererDelegate>
+     MPAutosaving, MPRendererDataSource, MPRendererDelegate, NSOutlineViewDelegate, NSOutlineViewDataSource>
 
 typedef NS_ENUM(NSUInteger, MPWordCountType) {
     MPWordCountTypeWord,
@@ -190,6 +192,8 @@ typedef NS_ENUM(NSUInteger, MPWordCountType) {
 @property (weak) IBOutlet NSLayoutConstraint *editorPaddingBottom;
 @property (weak) IBOutlet WebView *preview;
 @property (weak) IBOutlet NSPopUpButton *wordCountWidget;
+@property (weak) IBOutlet NSOutlineView *outlineView;
+@property MPTreeNode *outline;
 @property (copy, nonatomic) NSString *autosaveName;
 @property (strong) HGMarkdownHighlighter *highlighter;
 @property (strong) MPRenderer *renderer;
@@ -439,6 +443,9 @@ static void (^MPGetPreviewLoadingCompletionHandler(MPDocument *doc))()
             [self.highlighter parseAndHighlightNow];
         }
     }];
+    [self updateOutline];
+//    self.outlineView.dataSource = self;
+//    self.outlineView.delegate = self;
 }
 
 - (void)canCloseDocumentWithDelegate:(id)delegate
@@ -927,6 +934,8 @@ static void (^MPGetPreviewLoadingCompletionHandler(MPDocument *doc))()
 {
     if (self.needsHtml)
         [self.renderer parseAndRenderLater];
+//    [self updateOutline];
+//    [self.outlineView reloadData];
 }
 
 - (void)userDefaultsDidChange:(NSNotification *)notification
@@ -1554,6 +1563,48 @@ static void (^MPGetPreviewLoadingCompletionHandler(MPDocument *doc))()
             [invocation setArgument:&ok atIndex:1];
             [invocation invoke];
         }
+    }
+}
+
+- (void)updateOutline
+{
+    self.outline = [[[MPMarkdownOutlineParser alloc] init] parse:self.editor.string];
+}
+
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+{
+    if (item) {
+        MPTreeNode *node = item;
+        return node.children.count;
+    } else {
+        return self.outline.children.count;
+    }
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
+{
+    MPTreeNode *node = item;
+    if (!item) {
+        node = self.outline;
+    }
+    return node.children > 0;
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
+{
+    MPTreeNode *node = item;
+    if (!item) {
+        node = self.outline;
+    }
+    return node.children[index];
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
+{
+    if (item) {
+        return ((MPTreeNode *)item).content;
+    } else {
+        return @"Outlines";
     }
 }
 
