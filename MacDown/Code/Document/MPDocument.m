@@ -441,11 +441,12 @@ static void (^MPGetPreviewLoadingCompletionHandler(MPDocument *doc))()
             self.loadedString = nil;
             [self.renderer parseAndRenderNow];
             [self.highlighter parseAndHighlightNow];
+            [self updateOutline];
+            self.outlineView.dataSource = self;
+            self.outlineView.delegate = self;
+            [self.outlineView expandItem:nil expandChildren:YES];
         }
     }];
-    [self updateOutline];
-//    self.outlineView.dataSource = self;
-//    self.outlineView.delegate = self;
 }
 
 - (void)canCloseDocumentWithDelegate:(id)delegate
@@ -934,8 +935,7 @@ static void (^MPGetPreviewLoadingCompletionHandler(MPDocument *doc))()
 {
     if (self.needsHtml)
         [self.renderer parseAndRenderLater];
-//    [self updateOutline];
-//    [self.outlineView reloadData];
+    [self updateOutline];
 }
 
 - (void)userDefaultsDidChange:(NSNotification *)notification
@@ -1569,6 +1569,8 @@ static void (^MPGetPreviewLoadingCompletionHandler(MPDocument *doc))()
 - (void)updateOutline
 {
     self.outline = [[[MPMarkdownOutlineParser alloc] init] parse:self.editor.string];
+    [self.outlineView reloadData];
+    [self.outlineView expandItem:nil expandChildren:YES];
 }
 
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
@@ -1602,10 +1604,22 @@ static void (^MPGetPreviewLoadingCompletionHandler(MPDocument *doc))()
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
     if (item) {
-        return ((MPTreeNode *)item).content;
+        return [((MPTreeNode *)item).content description];
     } else {
         return @"Outlines";
     }
 }
 
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification
+{
+    MPMarkdownHeading *heading = [[self.outlineView itemAtRow:[self.outlineView selectedRow]] content];
+    NSRange range = [self.editor.string rangeOfString: [heading description]];
+    [self.editor scrollRangeToVisible:range];
+    [NSTimer scheduledTimerWithTimeInterval:0.4 target:self selector:@selector(showFindIndicator:) userInfo:[NSValue valueWithRange: range] repeats:NO];
+}
+
+- (void)showFindIndicator:(NSTimer *)timer
+{
+    [self.editor showFindIndicatorForRange:[[timer userInfo] rangeValue]];
+}
 @end
