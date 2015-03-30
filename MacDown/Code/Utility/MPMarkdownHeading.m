@@ -9,12 +9,14 @@
 #import "MPMarkdownHeading.h"
 
 @implementation MPMarkdownHeading
+@synthesize originalContent;
 @synthesize content;
 @synthesize level;
 
-- (id)initWithContent:(NSString *)c level:(NSInteger)l
+- (id)initWithOriginalContent:(NSString *)oc content:(NSString *)c level:(NSInteger)l
 {
     if (self = [super init]) {
+        originalContent = oc;
         content = c;
         level = l;
     }

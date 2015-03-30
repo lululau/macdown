@@ -193,6 +193,7 @@ typedef NS_ENUM(NSUInteger, MPWordCountType) {
 @property (weak) IBOutlet WebView *preview;
 @property (weak) IBOutlet NSPopUpButton *wordCountWidget;
 @property (weak) IBOutlet NSOutlineView *outlineView;
+@property (weak) IBOutlet NSSplitView *sidebarSplitView;
 @property MPTreeNode *outline;
 @property (copy, nonatomic) NSString *autosaveName;
 @property (strong) HGMarkdownHighlighter *highlighter;
@@ -935,7 +936,9 @@ static void (^MPGetPreviewLoadingCompletionHandler(MPDocument *doc))()
 {
     if (self.needsHtml)
         [self.renderer parseAndRenderLater];
-    [self updateOutline];
+    if (![[self sidebarSplitView] isSubviewCollapsed:[[[self sidebarSplitView]  subviews] objectAtIndex:0]]) {
+        [self updateOutline];
+    }
 }
 
 - (void)userDefaultsDidChange:(NSNotification *)notification
@@ -1288,6 +1291,44 @@ static void (^MPGetPreviewLoadingCompletionHandler(MPDocument *doc))()
     self.rendersTOC = nextState;
 }
 
+- (IBAction)toggleTOCSideBar:(id)sender
+{
+    BOOL sidebarCollapsed = [[self sidebarSplitView] isSubviewCollapsed:[[[self sidebarSplitView] subviews] objectAtIndex: 0]];
+    if (sidebarCollapsed) {
+        [self uncollapseSidebar];
+        [self updateOutline];
+    } else {
+        [self collapseSidebar];
+    }
+}
+
+-(void)collapseSidebar
+{
+    NSView *right = [[[self sidebarSplitView] subviews] objectAtIndex:1];
+    NSView *left  = [[[self sidebarSplitView] subviews] objectAtIndex:0];
+    NSRect rightFrame = [right frame];
+    NSRect overallFrame = [[self sidebarSplitView] frame];
+    [left setHidden:YES];
+    [right setFrameSize:NSMakeSize(overallFrame.size.width,rightFrame.size.height)];
+    [[self sidebarSplitView] display];
+}
+
+-(void)uncollapseSidebar
+{
+    NSView *left  = [[[self sidebarSplitView] subviews] objectAtIndex:0];
+    NSView *right = [[[self sidebarSplitView] subviews] objectAtIndex:1];
+    [left setHidden:NO];
+    CGFloat dividerThickness = [[self sidebarSplitView] dividerThickness];
+    // get the different frames
+    NSRect leftFrame = [left frame];
+    NSRect rightFrame = [right frame];
+    // Adjust left frame size
+    rightFrame.size.width = (rightFrame.size.width-leftFrame.size.width-dividerThickness);
+    rightFrame.origin.x = leftFrame.size.width + dividerThickness;
+    [right setFrameSize:rightFrame.size];
+    [left setFrame:leftFrame];
+    [[self sidebarSplitView] display];
+}
 
 #pragma mark - Private
 
@@ -1589,7 +1630,7 @@ static void (^MPGetPreviewLoadingCompletionHandler(MPDocument *doc))()
     if (!item) {
         node = self.outline;
     }
-    return node.children > 0;
+    return node.children.count > 0;
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
@@ -1613,9 +1654,14 @@ static void (^MPGetPreviewLoadingCompletionHandler(MPDocument *doc))()
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
     MPMarkdownHeading *heading = [[self.outlineView itemAtRow:[self.outlineView selectedRow]] content];
-    NSRange range = [self.editor.string rangeOfString: [heading description]];
+    NSRange range = [self.editor.string rangeOfString: [heading originalContent]];
     [self.editor scrollRangeToVisible:range];
     [NSTimer scheduledTimerWithTimeInterval:0.4 target:self selector:@selector(showFindIndicator:) userInfo:[NSValue valueWithRange: range] repeats:NO];
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView shouldEditTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
+    return NO;
 }
 
 - (void)showFindIndicator:(NSTimer *)timer

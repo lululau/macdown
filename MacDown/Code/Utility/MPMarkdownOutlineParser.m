@@ -41,7 +41,7 @@
         NSString *l = [md substringWithRange:[m rangeAtIndex:1]];
         NSInteger lev = l.length;
         NSString *c = [md substringWithRange:[m rangeAtIndex:2]];
-        [result addObject:[[MPMarkdownHeading alloc] initWithContent:c level:lev]];
+        [result addObject:[[MPMarkdownHeading alloc] initWithOriginalContent:[NSString stringWithFormat:@"%@%@", l ,c] content:c level:lev]];
     }
     return result;
 }

@@ -9,14 +9,16 @@
 #import <Foundation/Foundation.h>
 
 @interface MPMarkdownHeading : NSObject {
+    NSString *originalContent;
     NSString *content;
     NSInteger level;
 }
 
+@property NSString *originalContent;
 @property NSString *content;
 @property NSInteger level;
 
-- (id) initWithContent: (NSString *)content level: (NSInteger) level;
+- (id) initWithOriginalContent: (NSString *)oc content:(NSString *)c level: (NSInteger) level;
 - (NSString *)description;
 
 @end
