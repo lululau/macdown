@@ -75,6 +75,7 @@
 		1FFEB3271972DAB400B2254F /* MPHTMLTabularizeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFEB3261972DAB400B2254F /* MPHTMLTabularizeTests.m */; };
 		1FFEB32B19737D6E00B2254F /* YAMLSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFEB32A19737D6E00B2254F /* YAMLSerialization.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc -Wno-unused-variable"; }; };
 		1FFF301D1948A5320009AF24 /* MPStringLookupTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFF301C1948A5320009AF24 /* MPStringLookupTests.m */; };
+		223121961AD4CA2E000AC3A0 /* MPSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 223121951AD4CA2E000AC3A0 /* MPSplitViewController.m */; };
 		226BB2C21AC924A80067DCF2 /* MPMarkdownHeading.m in Sources */ = {isa = PBXBuildFile; fileRef = 226BB2BD1AC924A80067DCF2 /* MPMarkdownHeading.m */; };
 		226BB2C31AC924A80067DCF2 /* MPMarkdownOutlineParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 226BB2BF1AC924A80067DCF2 /* MPMarkdownOutlineParser.m */; };
 		226BB2C41AC924A80067DCF2 /* MPTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 226BB2C11AC924A80067DCF2 /* MPTreeNode.m */; };
@@ -252,6 +253,8 @@
 		1FFEB32919737D6E00B2254F /* YAMLSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YAMLSerialization.h; sourceTree = "<group>"; };
 		1FFEB32A19737D6E00B2254F /* YAMLSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YAMLSerialization.m; sourceTree = "<group>"; };
 		1FFF301C1948A5320009AF24 /* MPStringLookupTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPStringLookupTests.m; sourceTree = "<group>"; };
+		223121941AD4CA2E000AC3A0 /* MPSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPSplitViewController.h; sourceTree = "<group>"; };
+		223121951AD4CA2E000AC3A0 /* MPSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPSplitViewController.m; sourceTree = "<group>"; };
 		226BB2BC1AC924A80067DCF2 /* MPMarkdownHeading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMarkdownHeading.h; sourceTree = "<group>"; };
 		226BB2BD1AC924A80067DCF2 /* MPMarkdownHeading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMarkdownHeading.m; sourceTree = "<group>"; };
 		226BB2BE1AC924A80067DCF2 /* MPMarkdownOutlineParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMarkdownOutlineParser.h; sourceTree = "<group>"; };
@@ -382,6 +385,8 @@
 				1F0D9D91194AC852008E1856 /* MPDocument.h */,
 				1F0D9D92194AC852008E1856 /* MPDocument.m */,
 				1F0D9D83194AC83C008E1856 /* MPDocument.xib */,
+				223121941AD4CA2E000AC3A0 /* MPSplitViewController.h */,
+				223121951AD4CA2E000AC3A0 /* MPSplitViewController.m */,
 			);
 			name = Document;
 			path = Code/Document;
@@ -924,6 +929,7 @@
 				226BB2C31AC924A80067DCF2 /* MPMarkdownOutlineParser.m in Sources */,
 				1F33F2A11A3B4B660001C849 /* MPDocumentSplitView.m in Sources */,
 				1F23A92119928E650052DB78 /* MPMathJaxListener.m in Sources */,
+				223121961AD4CA2E000AC3A0 /* MPSplitViewController.m in Sources */,
 				1F2649B01A7406DB00EF6AF3 /* NSDocumentController+Document.m in Sources */,
 				1F0D9D67194AC7CF008E1856 /* MPUtilities.m in Sources */,
 				1F0D9D78194AC7F7008E1856 /* MPHtmlPreferencesViewController.m in Sources */,

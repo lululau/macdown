@@ -389,7 +389,7 @@
                                     <action selector="setEditorOneQuarter:" target="-1" id="kyy-J2-6rx"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Left 1:1 Right" keyEquivalent="0" id="hOV-YQ-vzy">
+                            <menuItem title="Left 1:1 Right" keyEquivalent="\" id="hOV-YQ-vzy">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <connections>
                                     <action selector="setEqualSplit:" target="-1" id="fJH-RN-c01"/>

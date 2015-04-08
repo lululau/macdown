@@ -29,6 +29,7 @@
 #import "MPMathJaxListener.h"
 #import "MPTreeNode.h"
 #import "MPMarkdownOutlineParser.h"
+#import "MPSplitViewController.h"
 
 
 static NSString * const kMPRendersTOCPropertyKey = @"Renders TOC";
@@ -1309,7 +1310,9 @@ static void (^MPGetPreviewLoadingCompletionHandler(MPDocument *doc))()
     NSRect rightFrame = [right frame];
     NSRect overallFrame = [[self sidebarSplitView] frame];
     [left setHidden:YES];
-    [right setFrameSize:NSMakeSize(overallFrame.size.width,rightFrame.size.height)];
+    CGFloat dividerThickness = [[self sidebarSplitView] dividerThickness];
+    [right setFrameSize:NSMakeSize(overallFrame.size.width - dividerThickness, rightFrame.size.height)];
+    [right setFrameOrigin:NSMakePoint(dividerThickness, 0)];
     [[self sidebarSplitView] display];
 }
 
