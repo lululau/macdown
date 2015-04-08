@@ -1657,6 +1657,9 @@ static void (^MPGetPreviewLoadingCompletionHandler(MPDocument *doc))()
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
     MPMarkdownHeading *heading = [[self.outlineView itemAtRow:[self.outlineView selectedRow]] content];
+    if (!heading) {
+        return;
+    }
     NSRange range = [self.editor.string rangeOfString: [heading originalContent]];
     [self.editor scrollRangeToVisible:range];
     [NSTimer scheduledTimerWithTimeInterval:0.4 target:self selector:@selector(showFindIndicator:) userInfo:[NSValue valueWithRange: range] repeats:NO];
